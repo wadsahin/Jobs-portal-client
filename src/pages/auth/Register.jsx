@@ -1,10 +1,13 @@
 import Lottie from "react-lottie";
 import registerLottie from "../../assets/lottie files/register.json"
 import { FcGoogle } from "react-icons/fc";
+import { useContext } from "react";
+import { AuthContext } from "../../provider/AuthProvider";
 const Register = () => {
-  // Handle Google Login
-  const handleGoogleLogin = () => {
+  const { newUserCreate, setLoading } = useContext(AuthContext);
 
+  // Handle Google Login
+  const handleGoogleSignUp = () => {
   }
   // Handle email & password login
   const handleUserRegister = (e) => {
@@ -14,8 +17,30 @@ const Register = () => {
     const photo = form.photo.value;
     const email = form.email.value;
     const password = form.password.value;
-    console.log(name, photo, email, password);
+    // console.log(name, photo, email, password);
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+    if (passwordRegex.test(password)) {
+      // user creation
+      newUserCreate(email, password)
+        .then(result => {
+          console.log(result.user);
+          if (result.user) {
+            alert("User registered successfully");
+          }
+        })
+        .catch(error => {
+          console.log(error.message);
+        })
+    }
+    else{
+      alert("Password must have at least one uppercase letter, one number, one special character, and be at least 6 characters long.")
+      return
+    }
   }
+
+
+
 
 
   // using lottie file
