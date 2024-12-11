@@ -1,12 +1,21 @@
 import Lottie from "react-lottie";
 import loginLottie from "../../assets/lottie files/login.json"
 import { FcGoogle } from "react-icons/fc";
+import { AuthContext } from "../../provider/AuthProvider";
+import { useContext } from "react";
 
 const Login = () => {
-
+  const {googleLogin} = useContext(AuthContext);
   // Handle Google Login
   const handleGoogleLogin = () => {
-    
+    googleLogin()
+    .then(result => {
+      console.log(result.user);
+      alert("Successfully Logged by Google!");
+    })
+    .catch(error => {
+      console.log(error.message);
+    })
   }
   // Handle email & password login
   const handleUserLogin = (e) =>{
@@ -38,7 +47,7 @@ const Login = () => {
             <h5 className="text-blue-600 font-semibold">Welcome back!</h5>
             <h2 className="text-4xl font-semibold">Member Login</h2>
             <p className="text-gray-600 mb-4">Access to all features. No credit card required.</p>
-            <button className="btn btn-outline border-gray-300"><FcGoogle size={24} /> Sign in with Google</button>
+            <button onClick={handleGoogleLogin} className="btn btn-outline border-gray-300"><FcGoogle size={24} /> Sign in with Google</button>
           </div>
           <div className="divider px-8">OR</div>
           <form onSubmit={handleUserLogin} className="card-body -mt-5">
