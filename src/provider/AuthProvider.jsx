@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createContext } from "react";
 import { auth } from '../firebase/firebase.config';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth';
 
 export const AuthContext = new createContext();
 
@@ -25,11 +25,31 @@ const AuthProvider = ({children}) => {
 
   }
 
+   // Sign Out 
+   const userSignOut = () => {
+    return signOut(auth);
+  }
+
+  // Set observer manage user status
+  useEffect(() => {
+   const unsubscribe =  onAuthStateChanged(auth, currentUser => {
+      console.log(currentUser);
+      setUser(currentUser);
+    })
+    return () =>{
+      unsubscribe();
+    }
+
+  }, []) 
+
+ 
+
   const authInfo = {
     user,
     loading,
     setLoading,
     googleLogin,
+    userSignOut,
   }
 
   return (
