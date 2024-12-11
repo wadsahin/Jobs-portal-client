@@ -4,7 +4,7 @@ import { FcGoogle } from "react-icons/fc";
 import { useContext } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
 const Register = () => {
-  const { newUserCreate, setLoading } = useContext(AuthContext);
+  const { newUserCreate, updateUser, setLoading } = useContext(AuthContext);
 
   // Handle Google Login
   const handleGoogleSignUp = () => {
@@ -24,13 +24,26 @@ const Register = () => {
       // user creation
       newUserCreate(email, password)
         .then(result => {
-          console.log(result.user);
-          if (result.user) {
-            alert("User registered successfully");
+          // console.log(result.user);
+
+          // for add name, photo via updateProfile()
+          const user = result.user;
+          if (user) {
+            const updatedInfo = {displayName: name, photoURL: photo};
+            // console.log(updatedInfo)
+            updateUser(updatedInfo)
+            .then(() => {
+              alert("User registered successfully");
+            })
+            .catch(err => {
+              console.log(err.message);
+            })
+
           }
         })
         .catch(error => {
           console.log(error.message);
+          alert(error.code);
         })
     }
     else{
